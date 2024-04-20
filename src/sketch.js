@@ -1,5 +1,4 @@
 const scl = 50;
-let vidas = 3;
 let sapoparchao = false;
 let ultimotronco = false;
 const metas = [1, 3, 5, 7, 9, 11];
@@ -14,20 +13,35 @@ let troncos1 = [];
 let troncos2 = [];
 let troncos3 = [];
 
+// Vidas
+let vidas = 3;
+let hearts = [];
+
+// Time
+let startTime = 0;
+let totalTime = 50000;
+
+let level = 1;
+let score = 0;
+
 function preload() {
   musica = loadSound("media/musica ambiente lofi.mp3")
   font = loadFont("fonts/MP16REG.ttf")
+  white_heart = loadImage("media/white_heart.png")
+  red_heart = loadImage("media/red_heart.png")
 }
 
 function setup() {
   createCanvas(650, 600);
   textFont(font);
-  textSize(32);
   // frameRate(5);
+  
+  // Se inicializa el tiempo
+  startTime = millis();
 
   cols = width / scl;
   rows = height / scl;
-
+  
   imgcarretera = loadImage("media/carretera.jpg");
   imgcarro1 = loadImage("media/carro1.jpeg");
   imgcarro2 = loadImage("media/carro2.jpeg");
@@ -36,8 +50,11 @@ function setup() {
   imgsapoganado = loadImage("media/sapo ganado.jpg");
   imgsapo = loadImage("media/sapo.png");
   imgtronco = loadImage("media/tronco.png");
-  white_heart = loadImage("media/white_heart.png")
-  red_heart = loadImage("media/red_heart.png")
+
+
+  for (let i = 0; i < vidas; i++) {
+    hearts.push(red_heart);
+  }
 
   sapo = new Sapo();
 
@@ -55,8 +72,8 @@ function setup() {
     if (i < 2) {
       troncos2.push(new Tronco(sapo, 9, createVector(9 * i, rows - 9)));
     }
-    troncos1.push(new Tronco(sapo, 8, createVector(5*i, rows-10), 0.05));
-    troncos3.push(new Tronco(sapo, 10, createVector(5*i, rows - 8)));
+    troncos1.push(new Tronco(sapo, 8, createVector(5*i, rows - 8), 0.05));
+    troncos3.push(new Tronco(sapo, 10, createVector(5*i, rows - 10)));
   }
   musica.play();
 }
@@ -68,6 +85,21 @@ function draw() {
   image(imgrio, 0, 0, cols * scl, ((rows * scl) / 2) - scl);
   image(imgcarretera, 0, (rows * scl) / 2, cols * scl, (rows * scl) / 2 - 1 * scl);
 
+  // Se renderiza la barra de tiempo
+  let elapsedTime = millis() - startTime;
+  let timeFraction = elapsedTime / totalTime;
+  timeFraction = min(timeFraction, 1);
+
+  let barWidth = 100 * (1 - timeFraction);
+
+  noFill();
+  stroke(0);
+  rect(540, 555, 100, 15);
+  
+  fill(255, 0, 0);
+  noStroke();
+  rect(540, 555, barWidth, 15);
+  
   // Se renderizan los carros
   for (let i = 0; i < 4; i++) {
     if (i < 3) {
@@ -75,39 +107,73 @@ function draw() {
     }
     carros1[i].render();
     carros3[i].render();
-    
   }
  
   sapo.render();
-  sapo.sapoganado();
 
-  ultimotronco = true;
 
   // Se renderizan los troncos
   for (let i = 0; i < troncos1.length; i++) {
     troncos1[i].render();
     troncos1[i].sapoagua();
     troncos3[i].render();
-    troncos3[i].sapoagua();
     if (i < 2) {
       troncos2[i].render();
       troncos2[i].sapoagua();
     }
   }
 
+  sapo.sapoganado();
+  // Para troncos3 
+  ultimotronco = true;
+  troncos3[0].sapoagua();
+  troncos3[1].sapoagua();
+  troncos3[2].sapoagua();
   sapoparchao = false;
   ultimotronco = false;
 
+  if (barWidth == 0) {
+    updateVidas();
+    startTime = millis();
+  }
+
+  updateHearts();
   if (vidas == 0) {
     noLoop();
-    musica.stop();
+    musica.stop();  
   }
-  let message = vidas !== 0 ? `VIDAS: ${vidas}` : "GAME OVER";
-  const x = 480;
-  const y = 585;
+  
+  // Text messages
+  let messageLost = vidas !== 0 ? `` : "GAME OVER";
+  const x = width / 2 - textWidth(messageLost);
+  const y = height / 2;
 
+  textSize(32);
   fill(255);
-  text(message, x, y);
+  text(messageLost, x, y);
+
+  textSize(16);
+  fill(0);
+  text(`Level: ${level}`, 20, 590);
+  text(`Score: ${score}`, 20 + textWidth(`Level: ${level}`) + 20, 590);
+}
+
+function updateHearts() { 
+    // Se renderizan los corazones
+  for (let i = 0; i < 3; i++) {
+    if (i < vidas) {
+      hearts[i] = red_heart;
+    } else {
+      hearts[i] = white_heart;
+    }
+    image(hearts[i], i * 20 + 560, 575, 20, 20);
+  }
+}
+
+function updateVidas() { 
+  if (vidas > 0) {
+    vidas--;
+  }
 }
 
 function keyPressed() {
@@ -170,12 +236,15 @@ class Sapo {
 
   sapoganado() {
     for (let i = 0; i < metas.length; i++) { // metas es el arreglo con las posiciones en x donde debe llegar el sapo
+      fill(255);
       rect(scl * metas[i], scl, scl, scl)
       // si el sapo llega a esas posiciones (se aproxima redondeando para que no sea necesaria demasiada precisión)
       if ((ceil(this.position.x) == metas[i] && this.position.y == 1) || (floor(this.position.x) == metas[i] && this.position.y == 1)) {
         meta[i] = true; // Se cambia en la posición del arreglo meta por true para saber que por ahí ya pasó y se devuelve al sapo al inicio
         this.position.x = floor(cols / 2);
         this.position.y = rows - 1;
+        score += 100;
+        startTime = millis();
       }
       if (meta[i] === true) { // Se pone la imagen estática de que llegó a las metas que haya conseguido
         imageMode(CORNER);
@@ -198,7 +267,7 @@ class Carro {
     if ((this.sapo.position.x == ceil(this.position.x) || this.sapo.position.x == floor(this.position.x)) && this.sapo.position.y == this.position.y) {
       this.sapo.position.x = floor(cols / 2);
       this.sapo.position.y = rows - 1;
-      vidas--;
+      updateVidas();
       console.log(vidas);
     }
   }
@@ -230,7 +299,7 @@ class Tronco {
       if (sapoparchao) {
         return;
       } else if (ultimotronco) { // Si llega al último tronco y no se ve que esté sobre este tronco, se supone que está en el agua y se le devuelve al inicio sin una vida
-        vidas--;
+        updateVidas();
         this.sapo.position.x = floor(cols / 2);
         this.sapo.position.y = rows - 1;
         console.log(vidas)

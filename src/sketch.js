@@ -1,6 +1,4 @@
 const scl = 50;
-let sapoparchao = false;
-let ultimotronco = false;
 const metas = [1, 3, 5, 7, 9, 11];
 let meta = [false, false, false, false, false, false];
 let font;
@@ -17,9 +15,9 @@ let troncos3 = [];
 let vidas = 3;
 let hearts = [];
 
-// Time
+// Tiempo
 let startTime = 0;
-let totalTime = 50000;
+let totalTime = 10000;
 
 let level = 1;
 let score = 0;
@@ -36,7 +34,7 @@ function setup() {
   textFont(font);
   // frameRate(5);
   
-  // Se inicializa el tiempo
+  // Inicialización tiempo
   startTime = millis();
 
   cols = width / scl;
@@ -51,29 +49,29 @@ function setup() {
   imgsapo = loadImage("media/sapo.png");
   imgtronco = loadImage("media/tronco.png");
 
-
+  // Inicialización corazones
   for (let i = 0; i < vidas; i++) {
     hearts.push(red_heart);
   }
 
   sapo = new Sapo();
 
-  // Se crean los carros y troncos con sus respectivas velocidades y posiciones iniciales
+  // Instanciación carros
   for (let i = 0; i < 4; i++) {
+    carros1.push(new Carro(2, createVector(4*i, rows - 2), 0.02));
     if (i < 3) {
-      carros2.push(new Carro(0.1, sapo, 4, createVector(9*i, rows - 4)));
+      carros2.push(new Carro(4, createVector(9*i, rows - 4), 0.1));
     } 
-    carros1.push(new Carro(0.02, sapo, 2, createVector(4*i, rows - 2)));
-    carros3.push(new Carro(0.04, sapo, 6, createVector(3*i, rows - 6)));
+    carros3.push(new Carro(6, createVector(3*i, rows - 6), 0.04));
   }
 
-  // Se crean los troncos con sus respectivas velocidades y posiciones iniciales
+  // Instanciación troncos
   for (let i = 0; i < 3; i++) {
     if (i < 2) {
-      troncos2.push(new Tronco(sapo, 9, createVector(9 * i, rows - 9)));
+      troncos2.push(new Tronco(9, createVector(9 * i, rows - 9)));
     }
-    troncos1.push(new Tronco(sapo, 8, createVector(5*i, rows - 8), 0.05));
-    troncos3.push(new Tronco(sapo, 10, createVector(5*i, rows - 10)));
+    troncos1.push(new Tronco(8, createVector(5*i, rows - 8), 0.05));
+    troncos3.push(new Tronco(10, createVector(5*i, rows - 10)));
   }
   musica.play();
 }
@@ -85,7 +83,7 @@ function draw() {
   image(imgrio, 0, 0, cols * scl, ((rows * scl) / 2) - scl);
   image(imgcarretera, 0, (rows * scl) / 2, cols * scl, (rows * scl) / 2 - 1 * scl);
 
-  // Se renderiza la barra de tiempo
+  // Renderización barra de tiempo
   let elapsedTime = millis() - startTime;
   let timeFraction = elapsedTime / totalTime;
   timeFraction = min(timeFraction, 1);
@@ -100,50 +98,35 @@ function draw() {
   noStroke();
   rect(540, 555, barWidth, 15);
   
-  // Se renderizan los carros
-  for (let i = 0; i < 4; i++) {
-    if (i < 3) {
-      carros2[i].render();
-    }
-    carros1[i].render();
-    carros3[i].render();
+  // Renderización carros
+  let allCars = [...carros1, ...carros2, ...carros3];
+  for (let i = 0; i < allCars.length; i++) {
+    allCars[i].render();
   }
- 
+
+  // Renderización troncos
+  let allLogs = [...troncos1, ...troncos2, ...troncos3];
+  for (let i = 0; i < allLogs.length; i++) {
+    allLogs[i].render();
+  }
+  
+  // Renderización sapo
   sapo.render();
+  sapo.update();
 
-
-  // Se renderizan los troncos
-  for (let i = 0; i < troncos1.length; i++) {
-    troncos1[i].render();
-    troncos1[i].sapoagua();
-    troncos3[i].render();
-    if (i < 2) {
-      troncos2[i].render();
-      troncos2[i].sapoagua();
-    }
-  }
-
-  sapo.sapoganado();
-  // Para troncos3 
-  ultimotronco = true;
-  troncos3[0].sapoagua();
-  troncos3[1].sapoagua();
-  troncos3[2].sapoagua();
-  sapoparchao = false;
-  ultimotronco = false;
-
+  // Validación de tiempo
   if (barWidth == 0) {
     updateVidas();
-    startTime = millis();
   }
 
+  // Valdación de vidas
   updateHearts();
   if (vidas == 0) {
     noLoop();
     musica.stop();  
   }
   
-  // Text messages
+  // Textos de nivel y score
   let messageLost = vidas !== 0 ? `` : "GAME OVER";
   const x = width / 2 - textWidth(messageLost);
   const y = height / 2;
@@ -159,7 +142,7 @@ function draw() {
 }
 
 function updateHearts() { 
-    // Se renderizan los corazones
+  // Renderización corazones
   for (let i = 0; i < 3; i++) {
     if (i < vidas) {
       hearts[i] = red_heart;
@@ -173,6 +156,7 @@ function updateHearts() {
 function updateVidas() { 
   if (vidas > 0) {
     vidas--;
+    startTime = millis();
   }
 }
 
@@ -229,11 +213,49 @@ class Sapo {
     this.position = createVector(floor(cols / 2), rows - 1);
   }
 
-  render() {
-    imageMode(CORNER);
-    image(imgsapo, this.position.x * scl, this.position.y * scl, scl, scl);
+  update() {
+    this.sapoganado();
+    if (this.position.y < rows / 2 - 1) {
+      if (!this.colisionTronco()) {
+        this.sapoMuere();
+      }
+    } else if (this.colisionCarro()) {
+      this.sapoMuere();
+    }
   }
-
+  
+  colisionCarro() {
+    let allCars = [...carros1, ...carros2, ...carros3];
+    for (let i = 0; i < allCars.length; i++) {
+      if ((this.position.x <= ceil(allCars[i].position.x) + 0.5) && (this.position.x >= floor(allCars[i].position.x) - 0.5) && (this.position.y == allCars[i].position.y)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  colisionTronco() { 
+    let onLog = false;
+    let allLogs = [...troncos1, ...troncos2, ...troncos3];
+    for (let i = 0; i <  allLogs.length; i++) {
+      if ((this.position.x <= ceil(allLogs[i].position.x) + 2.5) && (this.position.x >= floor(allLogs[i].position.x) - 0.5) && (this.position.y == allLogs[i].position.y)) {
+        onLog = true;
+        if (i > 2 && i < 5) { 
+          this.position.x -= allLogs[i].velocidad;
+        } else {
+          this.position.x += allLogs[i].velocidad;
+        }
+      } 
+    }
+    return onLog;
+  }
+  
+  sapoMuere() {
+    updateVidas();
+    this.position.x = floor(cols / 2);
+    this.position.y = rows - 1;
+  }
+  
   sapoganado() {
     for (let i = 0; i < metas.length; i++) { // metas es el arreglo con las posiciones en x donde debe llegar el sapo
       fill(255);
@@ -252,61 +274,33 @@ class Sapo {
       }
     }
   }
+
+  render() {
+    imageMode(CORNER);
+    image(imgsapo, this.position.x * scl, this.position.y * scl, scl, scl);
+  }
+
 }
 
 class Carro {
-  constructor(velocidad, sapo, inicio, position = createVector(-2, rows - inicio)) {
-    this.sapo = sapo;
+  constructor(inicio, position = createVector(-2, rows - inicio), velocidad) {
     this.inicio = inicio;
     this.position = position;
     this.velocidad = velocidad;
     this.imagen = "imgcarro" + str(this.inicio / 2);
   }
 
-  choque() { // si el sapo está en el mismo cuadrado del carro se devuelve al inicio y quita una vida (se redondea la posicion x del sapo por arriba y por abajo para ver si es igual)
-    if ((this.sapo.position.x == ceil(this.position.x) || this.sapo.position.x == floor(this.position.x)) && this.sapo.position.y == this.position.y) {
-      this.sapo.position.x = floor(cols / 2);
-      this.sapo.position.y = rows - 1;
-      updateVidas();
-      console.log(vidas);
-    }
-  }
-
   render() {
     TroncosyCarros(this.inicio, this.velocidad, this.position, this.imagen, cols, scl);
-    this.choque();
   }
 }
 
 class Tronco {
-  constructor(sapo, inicio, position = createVector(-2, rows - inicio), velocidad = 0.02) {
-    this.sapo = sapo;
+  constructor(inicio, position = createVector(-2, rows - inicio), velocidad = 0.02) {
     this.inicio = inicio;
     this.position = position;
     this.velocidad = velocidad;
     this.imagen = "imgtronco";
-  }
-
-  sapoagua() { // Si la posición x del sapo se encuentra aproximadamente dentro del tronco, se sincroniza su velocidad con la del tronco para que siga estando ahí
-    if ((this.sapo.position.x <= ceil(this.position.x) + 2.5) && (this.sapo.position.x >= floor(this.position.x) - 0.5) && (this.sapo.position.y == this.position.y)) {
-      if (this.inicio == 9) {
-        this.sapo.position.x -= this.velocidad;
-      } else {
-        this.sapo.position.x += this.velocidad;
-      }
-      sapoparchao = true; // Para saber que el sapo está encima de un tronco
-    } else if (this.sapo.position.y < rows / 2 - 1) { // Si el sapo no está encima de un tronco pero está en el agua, evalua con el siguiente
-      if (sapoparchao) {
-        return;
-      } else if (ultimotronco) { // Si llega al último tronco y no se ve que esté sobre este tronco, se supone que está en el agua y se le devuelve al inicio sin una vida
-        updateVidas();
-        this.sapo.position.x = floor(cols / 2);
-        this.sapo.position.y = rows - 1;
-        console.log(vidas)
-      } else {
-        return;
-      }
-    }
   }
 
   render() {

@@ -8,6 +8,7 @@ class Sapo {
     if (this.position.y < rows / 2 - 1) {
       if (!this.colisionTronco()) {
         this.sapoMuere();
+        splash.play();
       }
     } else if (this.colisionCarro()) {
       this.sapoMuere();
@@ -29,12 +30,14 @@ class Sapo {
     let allLogs = [...troncos1, ...troncos2, ...troncos3];
     for (let i = 0; i <  allLogs.length; i++) {
       if ((this.position.x <= ceil(allLogs[i].position.x) + 2.5) && (this.position.x >= floor(allLogs[i].position.x) - 0.5) && (this.position.y == allLogs[i].position.y)) {
-        onLog = true;
-        if (i > 2 && i < 5) { 
-          this.position.x -= allLogs[i].velocidad;
-        } else {
-          this.position.x += allLogs[i].velocidad;
-        }
+        if ((0 < this.position.x) && (this.position.x < cols - 1)) {
+          onLog = true;
+          if (i > 2 && i < 5) {
+            this.position.x -= allLogs[i].velocidad;
+          } else {
+            this.position.x += allLogs[i].velocidad;
+          }
+        }  
       } 
     }
     return onLog;
@@ -52,6 +55,9 @@ class Sapo {
       rect(scl * metas[i], scl, scl, scl)
       // si el sapo llega a esas posiciones (se aproxima redondeando para que no sea necesaria demasiada precisión)
       if ((ceil(this.position.x) == metas[i] && this.position.y == 1) || (floor(this.position.x) == metas[i] && this.position.y == 1)) {
+        if (meta[i]) {
+          this.sapoMuere();
+        }
         meta[i] = true; // Se cambia en la posición del arreglo meta por true para saber que por ahí ya pasó y se devuelve al sapo al inicio
         this.position.x = floor(cols / 2);
         this.position.y = rows - 1;

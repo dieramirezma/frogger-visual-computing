@@ -1,3 +1,21 @@
+function levelUp() {
+  level++;
+  score += 1000;
+  startTime = millis();
+  vidas = 3;
+  hearts = [red_heart, red_heart, red_heart];
+  meta = [false, false, false, false, false, false];
+}
+
+function metasAlcanzadas() { 
+  for (i in meta) {
+    if (!meta[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function updateHearts() { 
   // Renderización corazones
   for (let i = 0; i < 3; i++) {
@@ -17,22 +35,12 @@ function updateVidas() {
   }
 }
 
-function keyPressed() {
-  if (keyCode === UP_ARROW) {
-    if (sapo.position.y > 0) {
-      sapo.position.add(0, -1);
-    }
-  } else if (keyCode === DOWN_ARROW) {
-    if (sapo.position.y < rows - 1) {
-      sapo.position.add(0, 1);
-    }
-  } else if (keyCode === LEFT_ARROW) {
-    if (sapo.position.x > 0) {
-      sapo.position.add(-1, 0);
-    }
-  } else if (keyCode === RIGHT_ARROW) {
-    if (sapo.position.x < cols - 1) {
-      sapo.position.add(1, 0);
-    }
+function reinicio() {
+  for (i in meta) {
+    meta[i] = false;
   }
+  vidas = 3;
+  console.log(vidas);
+  sapo.position.x = floor(cols / 2);
+  sapo.position.y = rows - 1;
 }

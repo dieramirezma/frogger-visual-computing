@@ -1,4 +1,5 @@
 function levelUp() {
+  newLevel.play();
   level++;
   score += 1000;
   startTime = millis();
@@ -40,7 +41,8 @@ function reinicio() {
     meta[i] = false;
   }
   vidas = 3;
-  console.log(vidas);
   sapo.position.x = floor(cols / 2);
   sapo.position.y = rows - 1;
+  score = 0;
+  level = 1;
 }

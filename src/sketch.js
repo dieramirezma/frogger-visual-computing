@@ -1,6 +1,6 @@
 const scl = 50;
 const metas = [1, 3, 5, 7, 9, 11];
-let meta = [false, false, false, false, false, false];
+let meta = [false, true, true, true, true, true];
 let pause = false
 let font;
 
@@ -32,19 +32,27 @@ function setup() {
   cols = width / scl;
   
   rows = height / scl;
-  jump = loadSound("media/jump.mp3")
-  splash = loadSound("media/splash.mp3")
-  font = loadFont("fonts/MP16REG.ttf")
-  white_heart = loadImage("media/white_heart.png")
-  red_heart = loadImage("media/red_heart.png")
-  imgcarretera = loadImage("media/carretera.jpg");
+  jump = loadSound("media/jump.mp3");
+  splash = loadSound("media/splash.mp3");
+  carHit = loadSound("media/carHit.mp3");
+  frogWin = loadSound("media/frogWin.mp3");
+  newLevel = loadSound("media/levelUp.mp3");
+  gameOver = loadSound("media/gameOver.mp3");
+  font = loadFont("fonts/MP16REG.ttf");
+  white_heart = loadImage("media/white_heart.png");
+  red_heart = loadImage("media/red_heart.png");
+  midleRoad = loadImage("media/road.png");
+  bottomRoad = loadImage("media/bottomRoad.png");
+  topRoad = loadImage("media/topRoad.png");
+  grass = loadImage("media/grass.png");
+  sideWalk = loadImage("media/sideWalk.png");
   imgcarro1 = loadImage("media/carro5.png");
   imgcarro2 = loadImage("media/carro1.png");
   imgcarro3 = loadImage("media/carro2.png");
-  imgrio = loadImage("media/rio magdalena.jpeg");
-  imgsapoganado = loadImage("media/sapo ganado.jpg");
+  river = loadImage("media/river.png");
+  imgsapoganado = loadImage("media/sapoGanado.png");
   imgsapo = loadImage("media/sapopixel.png");
-  imgtronco = loadImage("media/tronco.png");
+  imgtronco = loadImage("media/log.png");
   
   textFont(font);
 
@@ -81,7 +89,21 @@ function draw() {
   fill(0,0,255);
   rect(0, 0, cols * scl, ((rows * scl) / 2) - scl)
   //image(imgrio, 0, 0, cols * scl, ((rows * scl) / 2) - scl);
-  //image(imgcarretera, 0, (rows * scl) / 2, cols * scl, (rows * scl) / 2 - 1 * scl);
+  image(grass, 0, 0,cols*scl, scl);
+  image(river, 0, 1*scl,cols*scl, scl);
+  image(river, 0, 2*scl,cols*scl, scl);
+  image(river, 0, 3*scl,cols*scl, scl);
+  image(river, 0, 4*scl,cols*scl, scl);
+  image(grass, 0, 5*scl,cols*scl, scl);
+  image(topRoad, 0, 6*scl, cols*scl, scl);
+  image(midleRoad, 0, 7*scl, cols*scl, scl);
+  image(midleRoad, 0, 8*scl, cols*scl, scl);
+  image(midleRoad, 0, 9*scl, cols*scl, scl);
+  image(bottomRoad, 0, 10*scl, cols*scl, scl);
+  image(sideWalk, 0, 11*scl, cols*scl, scl);
+
+
+
 
   // Renderización barra de tiempo
   let elapsedTime = millis() - startTime;
@@ -126,10 +148,9 @@ function draw() {
     textAlign(CENTER);
     fill(0);
     text("GAME OVER", width / 2, height / 2 -10);
-
-    console.log("sapomuerto")
     reinicio();
     noLoop();
+    gameOver.play();
   }
   
   if (metasAlcanzadas()) {

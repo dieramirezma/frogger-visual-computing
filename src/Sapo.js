@@ -11,6 +11,7 @@ class Sapo {
         splash.play();
       }
     } else if (this.colisionCarro()) {
+      carHit.play();
       this.sapoMuere();
     }
   }
@@ -30,8 +31,8 @@ class Sapo {
     let allLogs = [...troncos1, ...troncos2, ...troncos3];
     for (let i = 0; i <  allLogs.length; i++) {
       if ((this.position.x <= ceil(allLogs[i].position.x) + 2.5) && (this.position.x >= floor(allLogs[i].position.x) - 0.5) && (this.position.y == allLogs[i].position.y)) {
-        if ((0 < this.position.x) && (this.position.x < cols - 1)) {
-          onLog = true;
+        onLog = true;
+        if ((0 <= this.position.x) && (this.position.x < cols - 1)) {
           if (i > 2 && i < 5) {
             this.position.x -= allLogs[i].velocidad;
           } else {
@@ -56,17 +57,26 @@ class Sapo {
       // si el sapo llega a esas posiciones (se aproxima redondeando para que no sea necesaria demasiada precisión)
       if ((ceil(this.position.x) == metas[i] && this.position.y == 1) || (floor(this.position.x) == metas[i] && this.position.y == 1)) {
         if (meta[i]) {
-          this.sapoMuere();
+          this.position.y++;
         }
-        meta[i] = true; // Se cambia en la posición del arreglo meta por true para saber que por ahí ya pasó y se devuelve al sapo al inicio
-        this.position.x = floor(cols / 2);
-        this.position.y = rows - 1;
-        score += 100;
-        startTime = millis();
+        else{
+          meta[i] = true; // Se cambia en la posición del arreglo meta por true para saber que por ahí ya pasó y se devuelve al sapo al inicio
+          frogWin.play();
+          this.position.x = floor(cols / 2);
+          this.position.y = rows - 1;
+          score += 100;
+          //startTime = millis();
+        }
+        
       }
       if (meta[i] === true) { // Se pone la imagen estática de que llegó a las metas que haya conseguido
         imageMode(CORNER);
+        image(grass, scl * (metas[i]), scl, scl, scl);
         image(imgsapoganado, scl * (metas[i]), scl, scl, scl);
+      }
+      else{
+        imageMode(CORNER);
+        image(grass, scl * (metas[i]), scl, scl, scl);
       }
     }
   }

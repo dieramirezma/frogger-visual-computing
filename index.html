@@ -71,14 +71,27 @@
           </figure>
         </div>
         <img src="./media/images/arcade_icon.png" alt="Arcade Control" width="70">
+        <button id="btn_reanudar">Click me to play</button>
       </div>
     </main>
-
     <script type="text/javascript" src="functions.js"></script>
     <script type="text/javascript" src="Sapo.js"></script>
     <script type="text/javascript" src="ObjetoMovible.js"></script>
     <script type="text/javascript" src="Tronco.js"></script>
     <script type="text/javascript" src="Carro.js"></script>
     <script type="text/javascript" src="sketch.js"></script>
+    <script>
+      var context;
+      window.onload = function () {
+          context = new AudioContext();
+        }
+      document.querySelector('#btn_reanudar').addEventListener('click', function () {
+        context.resume().then(() => {
+          togglePause();
+          console.log('La reproducción se reanudó correctamente');
+          document.querySelector('#btn_reanudar').style.display = 'none';
+        });
+      });
+    </script>
   </body>
 </html>

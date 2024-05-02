@@ -70,3 +70,9 @@ main {
   margin-left: 20px;
 }
 
+#btn_reanudar {
+  display: block;
+  font-family: 'Mister Pixel 16 pt - Regular';
+  border-radius: 20px;
+  margin-bottom: 10px;
+}

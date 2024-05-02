@@ -110,3 +110,15 @@ function youWinFunc() {
   text(`SCORE: ${score}`, width / 2, height / 2 + 30);
   noLoop();
 }
+
+function togglePause() {
+  if (pause) {
+    pause = false;
+    startTime += millis() - time_paused;
+    loop();
+  } else {
+    pause = true;
+    time_paused = millis();
+    noLoop();
+  }
+}

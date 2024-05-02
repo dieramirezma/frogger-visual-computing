@@ -1,7 +1,7 @@
 const scl = 50;
 const metas = [1, 3, 5, 7, 9, 11];
 let meta = [false, false, false, false, false, false];
-let pause = false
+var pause = true;
 let font;
 
 // Declaración de arreglos para cada fila de carros y troncos
@@ -19,6 +19,7 @@ let hearts = [];
 // Tiempo
 let startTime = 0;
 let totalTime = 10000;
+let time_paused = 0;
 
 let level = 1;
 let score = 0;
@@ -47,19 +48,8 @@ function preload() {
   music_level4 = loadSound("media/sounds/music_level4.mp3");
   music_game_over = loadSound("media/sounds/music_game_over.mp3");
   music_win = loadSound("media/sounds/music_win.mp3");
-}
 
-function setup() {
-  let canvas = createCanvas(650, 600);
-  canvas.parent('canvas-container')  
-
-  // Inicialización tiempo
-  startTime = millis();
-  
-  cols = width / scl;
-  rows = height / scl;
-
-  // Resources
+    // Resources
   die_time = loadSound("media/sounds/die_time.mp3");
   landing_safe = loadSound("media/sounds/landing_safe.mp3");
   jump = loadSound("media/sounds/jump.mp3");
@@ -87,6 +77,18 @@ function setup() {
   imgsapoganado = loadImage("media/images/sapoGanado.png");
   imgsapo = loadImage("media/images/sapopixel.png");
   imgtronco = loadImage("media/images/log.png");
+}
+
+function setup() {
+  let canvas = createCanvas(650, 600);
+  canvas.parent('canvas-container')  
+
+  // Inicialización tiempo
+  startTime = millis();
+  
+  cols = width / scl;
+  rows = height / scl;
+
   
   textFont(font);
 
@@ -115,10 +117,18 @@ function setup() {
     troncos3.push(new Tronco(10, createVector(5*i, rows - 10), logsSpeeds[level][2]));
   }
 
+  if (pause) {
+    noLoop();
+  }
+
   setMusic();
 }
 
 function draw() {
+  if (!pause) {
+    loop();
+  }
+
   background(200);
 
   imageMode(CORNER);
@@ -219,30 +229,32 @@ function draw() {
 }
 
 function keyPressed() {
-  if (keyCode === UP_ARROW) {
-    if (sapo.position.y > 0) {
-      sapo.position.add(0, -1);
-      imgsapo = loadImage("media/images/sapopixel.png");
-      jump.play();
-      
-    }
-  } else if (keyCode === DOWN_ARROW) {
-    if (sapo.position.y < rows - 1) {
-      sapo.position.add(0, 1);
-      imgsapo = loadImage("media/images/sapopixelA.png");
-      jump.play();
-    }
-  } else if (keyCode === LEFT_ARROW) {
-    if (sapo.position.x > 0) {
-      sapo.position.add(-1, 0);
-      imgsapo = loadImage("media/images/sapopixelI.png");
-      jump.play();
-    }
-  } else if (keyCode === RIGHT_ARROW) {
-    if (sapo.position.x < cols - 1) {
-      sapo.position.add(1, 0);
-      imgsapo = loadImage("media/images/sapopixelD.png");
-      jump.play();
+  if (!pause) {
+    if (keyCode === UP_ARROW) {
+      if (sapo.position.y > 0) {
+        sapo.position.add(0, -1);
+        imgsapo = loadImage("media/images/sapopixel.png");
+        jump.play();
+        
+      }
+    } else if (keyCode === DOWN_ARROW) {
+      if (sapo.position.y < rows - 1) {
+        sapo.position.add(0, 1);
+        imgsapo = loadImage("media/images/sapopixelA.png");
+        jump.play();
+      }
+    } else if (keyCode === LEFT_ARROW) {
+      if (sapo.position.x > 0) {
+        sapo.position.add(-1, 0);
+        imgsapo = loadImage("media/images/sapopixelI.png");
+        jump.play();
+      }
+    } else if (keyCode === RIGHT_ARROW) {
+      if (sapo.position.x < cols - 1) {
+        sapo.position.add(1, 0);
+        imgsapo = loadImage("media/images/sapopixelD.png");
+        jump.play();
+      }
     }
   }
   else if (keyCode === ENTER) {
@@ -251,13 +263,6 @@ function keyPressed() {
   }
 
   else if (keyCode === 32) {
-    if (pause) {
-      pause = false;
-      loop();
-    }
-    else{
-      pause = true;
-      noLoop();
-    }
+    togglePause();
   }
 }

@@ -7,7 +7,7 @@ About Frogger: [https://es.wikipedia.org/wiki/Frogger](https://es.wikipedia.org/
 
 Based on: [https://www.minijuegos.com/juego/frogger](https://www.minijuegos.com/juego/frogger)
 
-Our version: [Frogger Arcade Video Game](https://www.minijuegos.com/juego/frogger)
+Our version: [Frogger Arcade Video Game]([https://www.minijuegos.com/juego/frogger](https://dieramirezma.github.io/frogger-visual-computing/))
 
 Team:
 - Brandon Styven Forero Briceño

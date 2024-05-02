@@ -4,6 +4,7 @@ class Sapo {
   }
 
   update() {
+    this.returnToGrass();
     this.sapoganado();
     if (this.position.y < rows / 2 - 1) {
       if (!this.colisionTronco()) {
@@ -29,16 +30,26 @@ class Sapo {
   colisionTronco() { 
     let onLog = false;
     let allLogs = [...troncos1, ...troncos2, ...troncos3];
-    for (let i = 0; i <  allLogs.length; i++) {
+    for (let i = 0; i < allLogs.length; i++) {
       if ((this.position.x <= ceil(allLogs[i].position.x) + 2.5) && (this.position.x >= floor(allLogs[i].position.x) - 0.5) && (this.position.y == allLogs[i].position.y)) {
         onLog = true;
-        if ((0 <= this.position.x) && (this.position.x < cols - 1)) {
-          if (i > 2 && i < 6) {
-            this.position.x -= allLogs[i].velocidad;
-          } else {
-            this.position.x += allLogs[i].velocidad;
+        if (this.position.y == 3) {
+          if ((0 <= this.position.x) && (this.position.x < cols - 1)) {
+            if (i > 2 && i < 6) {
+              this.position.x -= allLogs[i].velocidad;
+            } else {
+              this.position.x += allLogs[i].velocidad;
+            }
+          } 
+        } else if (this.position.y == 2 || this.position.y == 4) {
+          if ((-0.2 <= this.position.x) && (this.position.x < cols - 1.1)) {
+            if (i > 2 && i < 6) {
+              this.position.x -= allLogs[i].velocidad;
+            } else {
+              this.position.x += allLogs[i].velocidad;
+            }
           }
-        }  
+        }
       } 
     }
     return onLog;
@@ -49,7 +60,13 @@ class Sapo {
     this.position.x = floor(cols / 2);
     this.position.y = rows - 1;
   }
-  
+
+  returnToGrass() {
+    if (this.position.y >= rows / 2 - 1) {
+      this.position.x = round(this.position.x);
+    }
+  }
+
   sapoganado() {
     for (let i = 0; i < metas.length; i++) { // metas es el arreglo con las posiciones en x donde debe llegar el sapo
       fill(255);
@@ -65,7 +82,7 @@ class Sapo {
           this.position.x = floor(cols / 2);
           this.position.y = rows - 1;
           score += 100;
-          //startTime = millis();
+          startTime = millis();
         }
         
       }
@@ -83,6 +100,6 @@ class Sapo {
 
   render() {
     imageMode(CORNER);
-    image(imgsapo, this.position.x * scl, this.position.y * scl, scl, scl);
+    image(imgsapo , this.position.x * scl, this.position.y * scl, scl, scl);
   }
 }

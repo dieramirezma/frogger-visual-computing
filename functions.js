@@ -122,3 +122,7 @@ function togglePause() {
     noLoop();
   }
 }
+
+function setInicio() {
+  inicio = true;
+}

@@ -18,13 +18,15 @@ let hearts = [];
 
 // Tiempo
 let startTime = 0;
-let totalTime = 10000;
+let totalTime = 15000;
 let time_paused = 0;
 
 let level = 1;
 let score = 0;
 
 let maxLevel = 4;
+
+let inicio = false;
 
 // Level Speeds 
 let logsSpeeds = {
@@ -76,6 +78,9 @@ function preload() {
   river = loadImage("media/images/river.png");
   imgsapoganado = loadImage("media/images/sapoGanado.png");
   imgsapo = loadImage("media/images/sapopixel.png");
+  imgsapoI = loadImage("media/images/sapopixelI.png");
+  imgsapoD = loadImage("media/images/sapopixelD.png");
+  imgsapoA = loadImage("media/images/sapopixelA.png");
   imgtronco = loadImage("media/images/log.png");
 }
 
@@ -122,6 +127,7 @@ function setup() {
   }
 
   setMusic();
+
 }
 
 function draw() {
@@ -205,7 +211,7 @@ function draw() {
     if (vidas > 1) {
       die_time.play();
     }
-    updateVidas();
+    sapo.sapoMuere();
   }
 
   // Valdación de vidas
@@ -229,40 +235,42 @@ function draw() {
 }
 
 function keyPressed() {
-  if (!pause) {
-    if (keyCode === UP_ARROW) {
-      if (sapo.position.y > 0) {
-        sapo.position.add(0, -1);
-        imgsapo = loadImage("media/images/sapopixel.png");
-        jump.play();
-        
-      }
-    } else if (keyCode === DOWN_ARROW) {
-      if (sapo.position.y < rows - 1) {
-        sapo.position.add(0, 1);
-        imgsapo = loadImage("media/images/sapopixelA.png");
-        jump.play();
-      }
-    } else if (keyCode === LEFT_ARROW) {
-      if (sapo.position.x > 0) {
-        sapo.position.add(-1, 0);
-        imgsapo = loadImage("media/images/sapopixelI.png");
-        jump.play();
-      }
-    } else if (keyCode === RIGHT_ARROW) {
-      if (sapo.position.x < cols - 1) {
-        sapo.position.add(1, 0);
-        imgsapo = loadImage("media/images/sapopixelD.png");
-        jump.play();
-      }
+  if (keyCode === UP_ARROW) {
+    if (sapo.position.y > 0 && !pause && vidas > 0) {
+      sapo.position.add(0, -1);
+      imgsapo = loadImage("media/images/sapopixel.png");
+      jump.play();
+      
+    }
+  } else if (keyCode === DOWN_ARROW) {
+    if (sapo.position.y < rows - 1 && !pause && vidas > 0) {
+      sapo.position.add(0, 1);
+      imgsapo = imgsapoA
+      jump.play();
+    }
+  } else if (keyCode === LEFT_ARROW) {
+    if (sapo.position.x > 0 && !pause && vidas > 0) {
+      sapo.position.add(-1, 0);
+      imgsapo = imgsapoI
+      jump.play();
+    }
+  } else if (keyCode === RIGHT_ARROW) {
+    if (sapo.position.x < cols - 1 && !pause && vidas > 0) {
+      sapo.position.add(1, 0);
+      imgsapo = imgsapoD
+      jump.play();
     }
   }
   else if (keyCode === ENTER) {
-    reinicio();
-    loop();
+    if (inicio) {
+      reinicio();
+      loop();
+    }
   }
 
   else if (keyCode === 32) {
-    togglePause();
+    if (inicio) {
+      togglePause();
+    }
   }
 }

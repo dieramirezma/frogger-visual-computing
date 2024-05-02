@@ -4,15 +4,76 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sketch</title>
+    <title>Frogger Arcade Videogame</title>
 
     <link rel="stylesheet" type="text/css" href="style.css">
     
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js" allow="autoplay"></script>
+    <link rel="icon" href="./media/images/arcade_icon.ico" type="image/x-icon">
+    <link href="https://fonts.cdnfonts.com/css/mister-pixel-16" rel="stylesheet">
   </head>
 
   <body>
+    <main>
+      <div id="canvas-container" width="1300" height="1200" style="width: 650px; height: 600px;">
+
+      </div>
+      <div class="information">
+        <h1>Frogger Arcade Video Game</h1>
+        <h2>Controls</h2>
+        <div class="move-keys">
+          
+          <div class="item">
+            <div class="images">
+              <img src="./media/images/up_arrow_pixel.png" alt="Up arrow key" width="40">
+              <div class="horizontal-keys">
+                <img src="./media/images/left_arrow_pixel.png" alt="Left arrow key" width="40">
+                <img src="./media/images/down_arrow_pixel.png" alt="Down arrow key" width="40">
+                <img src="./media/images/right_arrow_pixel.png" alt="Right arrow key" width="40">
+              </div>
+            </div>
+          </div>
+            
+          <div class="item">
+            <h3>Move frog</h3>
+          </div>
+
+          <div class="item"> 
+            <img src="./media/images/space_bar_pixel.png" alt="Spacebar key" width="80 px">
+          </div>
+
+          <div class="item">
+            <h3>Pause/Resume</h3>
+          </div>
+
+          <div class="item">  
+            <img src="./media/images/enter_pixel.png" alt="Enter key" width="80">
+          </div>
+
+          <div class="item">  
+            <h3>Restart</h3>
+          </div>
+        </div> 
+        <h2>Developed by:</h2>
+        <div class="developers">
+          <figure class="developer">
+            <img src="./media/images/brandon.png" alt="Developer 1" width="43">
+            <figcaption>Brandon Forero</figcaption>
+          </figure>
+          <figure class="developer">
+            <img src="./media/images/felipe.png" alt="Developer 1" width="50">
+            <figcaption>Felipe Valderrama</figcaption>
+          </figure>
+          <figure class="developer">
+            <img src="./media/images/diego.png" alt="Developer 1" width="50">
+            <figcaption>Diego Ramirez</figcaption>
+          </figure>
+        </div>
+        <img src="./media/images/arcade_icon.png" alt="Arcade Control" width="70">
+      </div>
+    </main>
+
     <script type="text/javascript" src="functions.js"></script>
     <script type="text/javascript" src="Sapo.js"></script>
     <script type="text/javascript" src="ObjetoMovible.js"></script>

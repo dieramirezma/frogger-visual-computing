@@ -1,11 +1,72 @@
 html,
 body {
   height: 100%; 
+  font-family: 'Mister Pixel 16 pt - Regular';
 }
 
 body {
   margin: 0;
+  padding: 0;
   display: flex;
+  align-items: center;
   justify-content: center;
+  background-color: #9b9898;
+}
+
+main {
+  display: flex;
   align-items: center;
 }
+
+.p5Canvas {
+  border: 4px solid black;
+}
+
+.information {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 40px;
+  border: 3px solid black;
+  background-color: #858484;
+}
+
+.move-keys { 
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  grid-gap: 6px 20px;
+}
+
+.item {
+  align-self: center;
+}
+
+.item:nth-child(odd) {
+  justify-self: center;
+}
+
+.images { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.horizontal-keys {
+  display: flex;
+}
+
+.developers {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 10px;
+}
+
+.developer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 0px;
+  margin-left: 20px;
+}
+

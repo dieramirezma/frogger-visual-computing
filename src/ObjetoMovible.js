@@ -34,6 +34,10 @@ class ObjetoMovible {
         }
     }
 
+    updateSpeed(velocidad) {
+        this.velocidad = velocidad;
+    }
+
     render() {
         this.show(this.inicio, this.velocidad, this.position, this.imagen, cols, scl);
     }

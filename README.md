@@ -1,13 +1,17 @@
-# Computación visual
-## Tarea #1: Juego arcade - Frogger
-Enlaces de información:
+# Visual Computing
+## Assignment #1: Arcade game - Frogger
 
-Información sobre el juego: [https://es.wikipedia.org/wiki/Frogger](https://es.wikipedia.org/wiki/Frogger)
+Links:
 
-Juego: [https://www.minijuegos.com/juego/frogger](https://www.minijuegos.com/juego/frogger)
+About Frogger: [https://es.wikipedia.org/wiki/Frogger](https://es.wikipedia.org/wiki/Frogger)
 
+Based on: [https://www.minijuegos.com/juego/frogger](https://www.minijuegos.com/juego/frogger)
 
-Equipo:
+Our version: [Frogger Arcade Video Game](https://www.minijuegos.com/juego/frogger)
+
+Team:
 - Brandon Styven Forero Briceño
 - Diego Nicolás Ramírez Maldonado
 - Felipe Santiago Valderrama Ballesteros
+
+University of Colombia 2024-1S

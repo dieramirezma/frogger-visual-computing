@@ -1,6 +1,6 @@
 const scl = 50;
 const metas = [1, 3, 5, 7, 9, 11];
-let meta = [false, true, true, true, true, true];
+let meta = [false, false, false, false, false, false];
 let pause = false
 let font;
 
@@ -18,41 +18,75 @@ let hearts = [];
 
 // Tiempo
 let startTime = 0;
-let totalTime = 50000;
+let totalTime = 10000;
 
 let level = 1;
 let score = 0;
 
+let maxLevel = 4;
+
+// Level Speeds 
+let logsSpeeds = {
+  1: [0.05, 0.07, 0.02],
+  2: [0.08, 0.1, 0.05],
+  3: [0.11, 0.13, 0.08],
+  4: [0.14, 0.16, 0.11]
+}
+
+let carsSpeeds = {
+  1: [0.02, 0.1, 0.04],
+  2: [0.05, 0.13, 0.07],
+  3: [0.08, 0.16, 0.1],
+  4: [0.11, 0.19, 0.13]
+}
+
+function preload() {
+  music_level1 = loadSound("media/sounds/music_level1.mp3");
+  music_level2 = loadSound("media/sounds/music_level2.mp3");
+  music_level3 = loadSound("media/sounds/music_level3.mp3");
+  music_level4 = loadSound("media/sounds/music_level4.mp3");
+  music_game_over = loadSound("media/sounds/music_game_over.mp3");
+  music_win = loadSound("media/sounds/music_win.mp3");
+}
+
 function setup() {
-  createCanvas(650, 600);
-  
+  let canvas = createCanvas(650, 600);
+  canvas.parent('canvas-container')  
+
   // Inicialización tiempo
   startTime = millis();
   
   cols = width / scl;
-  
   rows = height / scl;
-  jump = loadSound("media/jump.mp3");
-  splash = loadSound("media/splash.mp3");
-  carHit = loadSound("media/carHit.mp3");
-  frogWin = loadSound("media/frogWin.mp3");
-  newLevel = loadSound("media/levelUp.mp3");
-  gameOver = loadSound("media/gameOver.mp3");
+
+  // Resources
+  die_time = loadSound("media/sounds/die_time.mp3");
+  landing_safe = loadSound("media/sounds/landing_safe.mp3");
+  jump = loadSound("media/sounds/jump.mp3");
+  splash = loadSound("media/sounds/splash.mp3");
+  carHit = loadSound("media/sounds/carHit.mp3");
+  frogWin = loadSound("media/sounds/frogWin.mp3");
+  newLevel = loadSound("media/sounds/levelUp.mp3");
+  gameOver = loadSound("media/sounds/gameOver.mp3");
+
   font = loadFont("fonts/MP16REG.ttf");
-  white_heart = loadImage("media/white_heart.png");
-  red_heart = loadImage("media/red_heart.png");
-  midleRoad = loadImage("media/road.png");
-  bottomRoad = loadImage("media/bottomRoad.png");
-  topRoad = loadImage("media/topRoad.png");
-  grass = loadImage("media/grass.png");
-  sideWalk = loadImage("media/sideWalk.png");
-  imgcarro1 = loadImage("media/carro5.png");
-  imgcarro2 = loadImage("media/carro1.png");
-  imgcarro3 = loadImage("media/carro2.png");
-  river = loadImage("media/river.png");
-  imgsapoganado = loadImage("media/sapoGanado.png");
-  imgsapo = loadImage("media/sapopixel.png");
-  imgtronco = loadImage("media/log.png");
+  
+  white_heart = loadImage("media/images/white_heart.png");
+  red_heart = loadImage("media/images/red_heart.png");
+  midleRoad = loadImage("media/images/road.png");
+  bottomRoad = loadImage("media/images/bottomRoad.png");
+  topRoad = loadImage("media/images/topRoad.png");
+  grass = loadImage("media/images/grass.png");
+  sideWalk = loadImage("media/images/sideWalk.png");
+  imgcarro1 = loadImage("media/images/carro5.png");
+  imgcarro2 = loadImage("media/images/carro1.png");
+  imgcarro3 = loadImage("media/images/carro2.png");
+  imgcarro4 = loadImage("media/images/carro4.png");
+  imgcarro5 = loadImage("media/images/carro5.png");
+  river = loadImage("media/images/river.png");
+  imgsapoganado = loadImage("media/images/sapoGanado.png");
+  imgsapo = loadImage("media/images/sapopixel.png");
+  imgtronco = loadImage("media/images/log.png");
   
   textFont(font);
 
@@ -65,21 +99,23 @@ function setup() {
 
   // Instanciación carros
   for (let i = 0; i < 4; i++) {
-    carros1.push(new Carro(2, createVector(4*i, rows - 2), 0.02));
+    carros1.push(new Carro(2, createVector(4*i, rows - 2), carsSpeeds[level][0]));
     if (i < 3) {
-      carros2.push(new Carro(4, createVector(9*i, rows - 4), 0.1));
+      carros2.push(new Carro(4, createVector(9*i, rows - 4), carsSpeeds[level][1]));
     } 
-    carros3.push(new Carro(6, createVector(3*i, rows - 6), 0.04));
+    carros3.push(new Carro(6, createVector(3*i, rows - 6), carsSpeeds[level][2]));
   }
 
   // Instanciación troncos
   for (let i = 0; i < 3; i++) {
-    if (i < 2) {
-      troncos2.push(new Tronco(9, createVector(9 * i, rows - 9)));
+    troncos1.push(new Tronco(8, createVector(5*i, rows - 8), logsSpeeds[level][0]));
+    if (i < 3) {
+      troncos2.push(new Tronco(9, createVector(5 * i, rows - 9), logsSpeeds[level][1]));
     }
-    troncos1.push(new Tronco(8, createVector(5*i, rows - 8), 0.05));
-    troncos3.push(new Tronco(10, createVector(5*i, rows - 10)));
+    troncos3.push(new Tronco(10, createVector(5*i, rows - 10), logsSpeeds[level][2]));
   }
+
+  setMusic();
 }
 
 function draw() {
@@ -88,7 +124,6 @@ function draw() {
   imageMode(CORNER);
   fill(0,0,255);
   rect(0, 0, cols * scl, ((rows * scl) / 2) - scl)
-  //image(imgrio, 0, 0, cols * scl, ((rows * scl) / 2) - scl);
   image(grass, 0, 0,cols*scl, scl);
   image(river, 0, 1*scl,cols*scl, scl);
   image(river, 0, 2*scl,cols*scl, scl);
@@ -101,9 +136,6 @@ function draw() {
   image(midleRoad, 0, 9*scl, cols*scl, scl);
   image(bottomRoad, 0, 10*scl, cols*scl, scl);
   image(sideWalk, 0, 11*scl, cols*scl, scl);
-
-
-
 
   // Renderización barra de tiempo
   let elapsedTime = millis() - startTime;
@@ -119,6 +151,28 @@ function draw() {
   fill(255, 0, 0);
   noStroke();
   rect(540, 555, barWidth, 15);
+
+  // Acualización de velocidad
+  // Carros
+  for (let i = 0; i < carros1.length; i++) {
+    carros1[i].updateSpeed(carsSpeeds[level][0]);
+    carros3[i].updateSpeed(carsSpeeds[level][2]);
+  }
+  
+  for (let i = 0; i < carros2.length; i++) {
+    carros2[i].updateSpeed(carsSpeeds[level][1]);
+  }
+
+  // Troncos
+  for (let i = 0; i < troncos1.length; i++) {
+    troncos1[i].updateSpeed(logsSpeeds[level][0]);
+    troncos3[i].updateSpeed(logsSpeeds[level][2]);
+  }
+
+  for (let i = 0; i < troncos2.length; i++) {
+    troncos2[i].updateSpeed(logsSpeeds[level][1]);
+  }
+
   
   // Renderización carros
   let allCars = [...carros1, ...carros2, ...carros3];
@@ -138,19 +192,18 @@ function draw() {
 
   // Validación de tiempo
   if (barWidth == 0) {
+    if (vidas > 1) {
+      die_time.play();
+    }
     updateVidas();
   }
 
   // Valdación de vidas
   updateHearts();
   if (vidas == 0) {
-    textSize(50);
-    textAlign(CENTER);
-    fill(0);
-    text("GAME OVER", width / 2, height / 2 -10);
-    reinicio();
-    noLoop();
-    gameOver.play();
+    gameOverFunc();
+  } else if (level > maxLevel) {
+    youWinFunc();
   }
   
   if (metasAlcanzadas()) {
@@ -169,26 +222,26 @@ function keyPressed() {
   if (keyCode === UP_ARROW) {
     if (sapo.position.y > 0) {
       sapo.position.add(0, -1);
-      imgsapo = loadImage("media/sapopixel.png");
+      imgsapo = loadImage("media/images/sapopixel.png");
       jump.play();
       
     }
   } else if (keyCode === DOWN_ARROW) {
     if (sapo.position.y < rows - 1) {
       sapo.position.add(0, 1);
-      imgsapo = loadImage("media/sapopixelA.png");
+      imgsapo = loadImage("media/images/sapopixelA.png");
       jump.play();
     }
   } else if (keyCode === LEFT_ARROW) {
     if (sapo.position.x > 0) {
       sapo.position.add(-1, 0);
-      imgsapo = loadImage("media/sapopixelI.png");
+      imgsapo = loadImage("media/images/sapopixelI.png");
       jump.play();
     }
   } else if (keyCode === RIGHT_ARROW) {
     if (sapo.position.x < cols - 1) {
       sapo.position.add(1, 0);
-      imgsapo = loadImage("media/sapopixelD.png");
+      imgsapo = loadImage("media/images/sapopixelD.png");
       jump.play();
     }
   }

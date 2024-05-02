@@ -33,7 +33,7 @@ class Sapo {
       if ((this.position.x <= ceil(allLogs[i].position.x) + 2.5) && (this.position.x >= floor(allLogs[i].position.x) - 0.5) && (this.position.y == allLogs[i].position.y)) {
         onLog = true;
         if ((0 <= this.position.x) && (this.position.x < cols - 1)) {
-          if (i > 2 && i < 5) {
+          if (i > 2 && i < 6) {
             this.position.x -= allLogs[i].velocidad;
           } else {
             this.position.x += allLogs[i].velocidad;

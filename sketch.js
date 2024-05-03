@@ -1,7 +1,6 @@
 const scl = 50;
 const metas = [1, 3, 5, 7, 9, 11];
-// let meta = [false, false, false, false, false, false];
-let meta = [true, true, true, false, true, true];
+let meta = [false, false, false, false, false, false];
 var pause = true;
 let font;
 

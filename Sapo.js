@@ -1,6 +1,7 @@
 class Sapo {
   constructor() {
     this.position = createVector(floor(cols / 2), rows - 1);
+    this.move = true;
   }
 
   update() {
@@ -56,9 +57,15 @@ class Sapo {
   }
   
   sapoMuere() {
+    this.move = false;
     updateVidas();
     this.position.x = floor(cols / 2);
-    this.position.y = rows - 1;
+    this.position.y = rows - 1;   
+
+    setTimeout(() => {
+      this.move = true;
+    }, 1000);
+
   }
 
   returnToGrass() {
@@ -72,7 +79,7 @@ class Sapo {
       fill(255);
       rect(scl * metas[i], scl, scl, scl)
       // si el sapo llega a esas posiciones (se aproxima redondeando para que no sea necesaria demasiada precisión)
-      if ((ceil(this.position.x) == metas[i] && this.position.y == 1) || (floor(this.position.x) == metas[i] && this.position.y == 1)) {
+      if ((this.position.x >= metas[i] - 0.5 && this.position.y == 1) && (this.position.x <= metas[i] + 0.5 && this.position.y == 1)) {
         if (meta[i]) {
           this.position.y++;
         }

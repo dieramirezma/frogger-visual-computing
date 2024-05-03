@@ -1,6 +1,7 @@
 const scl = 50;
 const metas = [1, 3, 5, 7, 9, 11];
-let meta = [false, false, false, false, false, false];
+// let meta = [false, false, false, false, false, false];
+let meta = [true, true, true, false, true, true];
 var pause = true;
 let font;
 
@@ -214,16 +215,16 @@ function draw() {
     sapo.sapoMuere();
   }
 
+  if (metasAlcanzadas()) {
+    levelUp();
+  }
+
   // Valdación de vidas
   updateHearts();
   if (vidas == 0) {
     gameOverFunc();
   } else if (level > maxLevel) {
     youWinFunc();
-  }
-  
-  if (metasAlcanzadas()) {
-    levelUp();
   }
   
   // Score
@@ -236,26 +237,26 @@ function draw() {
 
 function keyPressed() {
   if (keyCode === UP_ARROW) {
-    if (sapo.position.y > 0 && !pause && vidas > 0) {
+    if (sapo.position.y > 0 && !pause && vidas > 0 && sapo.move) {
       sapo.position.add(0, -1);
       imgsapo = loadImage("media/images/sapopixel.png");
       jump.play();
       
     }
   } else if (keyCode === DOWN_ARROW) {
-    if (sapo.position.y < rows - 1 && !pause && vidas > 0) {
+    if (sapo.position.y < rows - 1 && !pause && vidas > 0 && sapo.move) {
       sapo.position.add(0, 1);
       imgsapo = imgsapoA
       jump.play();
     }
   } else if (keyCode === LEFT_ARROW) {
-    if (sapo.position.x > 0 && !pause && vidas > 0) {
+    if (sapo.position.x > 0 && !pause && vidas > 0 && sapo.move) {
       sapo.position.add(-1, 0);
       imgsapo = imgsapoI
       jump.play();
     }
   } else if (keyCode === RIGHT_ARROW) {
-    if (sapo.position.x < cols - 1 && !pause && vidas > 0) {
+    if (sapo.position.x < cols - 1 && !pause && vidas > 0 && sapo.move) {
       sapo.position.add(1, 0);
       imgsapo = imgsapoD
       jump.play();

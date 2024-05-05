@@ -20,6 +20,13 @@ class Sapo {
   
   colisionCarro() {
     let allCars = [...carros1, ...carros2, ...carros3];
+    if (level == 3) {
+      allCars = [...allCars, ...carros4];
+    }
+    if (level == 4) {
+      allCars = [...allCars, ...carros4, ...carros5];
+    }
+
     for (let i = 0; i < allCars.length; i++) {
       if ((this.position.x <= ceil(allCars[i].position.x) + 0.5) && (this.position.x >= floor(allCars[i].position.x) - 0.5) && (this.position.y == allCars[i].position.y)) {
         return true;

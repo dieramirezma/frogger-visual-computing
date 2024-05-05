@@ -13,6 +13,9 @@ let troncos1 = [];
 let troncos2 = [];
 let troncos3 = [];
 
+let carros4 = [];
+let carros5 = [];
+
 // Vidas
 let vidas = 3;
 let hearts = [];
@@ -39,9 +42,9 @@ let logsSpeeds = {
 
 let carsSpeeds = {
   1: [0.02, 0.1, 0.04],
-  2: [0.05, 0.13, 0.07],
-  3: [0.08, 0.16, 0.1],
-  4: [0.11, 0.19, 0.13]
+  2: [0.04, 0.12, 0.06],
+  3: [0.06, 0.14, 0.08],
+  4: [0.08, 0.16, 0.1]
 }
 
 function preload() {
@@ -107,11 +110,17 @@ function setup() {
 
   // Instanciación carros
   for (let i = 0; i < 4; i++) {
-    carros1.push(new Carro(2, createVector(4*i, rows - 2), carsSpeeds[level][0]));
     if (i < 3) {
-      carros2.push(new Carro(4, createVector(9*i, rows - 4), carsSpeeds[level][1]));
+      carros2.push(new Carro(4, createVector(9 * i, rows - 4), carsSpeeds[level][1]));
     } 
-    carros3.push(new Carro(6, createVector(3*i, rows - 6), carsSpeeds[level][2]));
+    
+    if (i < 2) {
+      carros4.push(new Carro(3, createVector(7 * i, rows - 3), 0.02));
+      carros5.push(new Carro(5, createVector(7 * i, rows - 5), 0.03));
+    }
+    
+    carros1.push(new Carro(2, createVector(4*i, rows - 2), carsSpeeds[level][0]));
+    carros3.push(new Carro(6, createVector(5*i, rows - 6), carsSpeeds[level][2]));
   }
 
   // Instanciación troncos
@@ -193,6 +202,14 @@ function draw() {
   
   // Renderización carros
   let allCars = [...carros1, ...carros2, ...carros3];
+
+  if (level == 3) {
+    allCars = [...allCars, ...carros4];
+  }
+  if (level == 4) {
+    allCars = [...allCars, ...carros4, ...carros5];
+  }
+
   for (let i = 0; i < allCars.length; i++) {
     allCars[i].render();
   }

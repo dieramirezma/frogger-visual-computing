@@ -14,4 +14,4 @@ Team:
 - Diego Nicolás Ramírez Maldonado
 - Felipe Santiago Valderrama Ballesteros
 
-University of Colombia 2024-1S
+University of Colombia 2024-1S.
